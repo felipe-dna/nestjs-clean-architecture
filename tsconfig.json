@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "sourceMap": true,
+        "outDir": "dist",
+        "strict": true,
+        "lib": ["ESNext"],
+        "esModuleInterop": true,
+        "types": [
+            "vite/client",
+        ],
+        "experimentalDecorators": true,
+        "moduleResolution": "node",
+        "module": "esnext",
+    },
+    "exclude": [
+        "node_modules",
+      ]
+}
