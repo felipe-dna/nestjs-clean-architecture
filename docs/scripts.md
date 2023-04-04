@@ -1,0 +1,30 @@
+# Scripts
+
+- Migrations
+    - [migrate:generate]()
+    - [migrate:deploy]()
+    - [migrate:dev]()
+    - [migrate:reset]()
+    - [migrate:apply]()
+- Quality
+    - [lint]()
+    - [lint:fix]()
+    - [format]()
+- Development
+    - [prepare]()
+- Server
+    - [start]()
+    - [start:dev]()
+    - [start:debug]()
+    - [start:prod]()
+    - [build]()
+- Tests
+    - [test]()
+    - [test:watch]()
+    - [test:cov]()
+    - [test:debug]()
+    - [test:e2e]()
+- Docker
+    - [deploy:local]
+    - [deploy:staging]
+    - [deploy:production]
