@@ -7,8 +7,8 @@ import { ConfigModule } from '@nestjs/config'
 import { ApiConfigService } from '@services/api-config.service'
 
 @Module({
-  imports: [
-				/**
+	imports: [
+		/**
 		 * Config Module:
 		 * https://docs.nestjs.com/techniques/configuration
 		 */
@@ -16,14 +16,14 @@ import { ApiConfigService } from '@services/api-config.service'
 			isGlobal: true,
 		}),
 	],
-  controllers: [UserService],
-  providers: [
-    {
-      provide: UserRepository,
-      useClass: UsersInMemoryRepository,
-    },
-    CreateUserUsecase,
-		ApiConfigService
-  ],
+	controllers: [UserService],
+	providers: [
+		{
+			provide: UserRepository,
+			useClass: UsersInMemoryRepository,
+		},
+		CreateUserUsecase,
+		ApiConfigService,
+	],
 })
 export class AppModule {}

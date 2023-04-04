@@ -1,6 +1,6 @@
-import { AppConfig, DatabaseConfig, SwaggerConfig } from "@/config/configuration"
-import { Injectable } from "@nestjs/common"
-import { ConfigService } from "@nestjs/config"
+import { AppConfig, DatabaseConfig, SwaggerConfig } from '@/config/configuration'
+import { Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class ApiConfigService {
@@ -17,7 +17,7 @@ export class ApiConfigService {
 			host: this.getVar<DatabaseConfig['host']>('DATABASE_HOST'),
 			password: this.getVar<DatabaseConfig['password']>('DATABASE_PASSWORD'),
 			url: this.getVar<DatabaseConfig['url']>('DATABASE_URL'),
-			user: this.getVar<DatabaseConfig['user']>('DATABASE_USER')
+			user: this.getVar<DatabaseConfig['user']>('DATABASE_USER'),
 		}
 	}
 
@@ -27,14 +27,14 @@ export class ApiConfigService {
 			tag: this.getVar<SwaggerConfig['tag']>('SWAGGER_TAG'),
 			title: this.getVar<SwaggerConfig['title']>('SWAGGER_TITLE'),
 			url: this.getVar<SwaggerConfig['url']>('SWAGGER_URL'),
-			version: this.getVar<SwaggerConfig['version']>('SWAGGER_VERSION')
+			version: this.getVar<SwaggerConfig['version']>('SWAGGER_VERSION'),
 		}
 	}
 
 	get appConfig(): AppConfig {
 		return {
 			port: this.getVar<AppConfig['port']>('APP_PORT'),
-			name: this.getVar<AppConfig['name']>('APP_NAME')
+			name: this.getVar<AppConfig['name']>('APP_NAME'),
 		}
 	}
 }
