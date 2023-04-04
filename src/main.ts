@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core'
 import { AppModule } from '@modules/app.module'
 import { INestApplication, Logger, VersioningType } from '@nestjs/common'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-import { ApiConfigService } from '@services/api-config.service'
+import { ApiConfigService } from '@services/config/api-config.service'
 
 /**
  * Sets up the swagger module.
@@ -19,8 +19,8 @@ function setSwagger(app: INestApplication) {
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule)
-	const config = app.get<ApiConfigService>(ApiConfigService)
-	const logger = new Logger(config.appConfig.name)
+	const config = app.get<ApiConfigService>(ApiConfigService).appConfig
+	const logger = new Logger(config.name)
 
 	/**
 	 * Swagger
@@ -37,6 +37,6 @@ async function bootstrap() {
 		type: VersioningType.URI,
 	})
 
-	await app.listen(3000)
+	await app.listen(config.port)
 }
 bootstrap()

@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common'
-import { UserService } from '@services/users/users.service'
-import { CreateUserUsecase } from '@usecases/users/create-user.usecase'
+import { ConfigModule } from '@nestjs/config'
 import { UserRepository } from '@repositories/users/user.repository'
 import { UsersInMemoryRepository } from '@data/in-memory/users-in-memory.repository'
-import { ConfigModule } from '@nestjs/config'
-import { ApiConfigService } from '@services/api-config.service'
+import { CreateUserUsecase } from '@usecases/users/create-user.usecase'
+import { UserServiceV1 } from '@services/users/users.service'
+import { ApiConfigService } from '@services/config/api-config.service'
+import { PrismaService } from '@services/prisma/prisma.service'
 
 @Module({
 	imports: [
@@ -16,14 +17,30 @@ import { ApiConfigService } from '@services/api-config.service'
 			isGlobal: true,
 		}),
 	],
-	controllers: [UserService],
+	controllers: [UserServiceV1],
 	providers: [
+		/**
+		 * Repositories.
+		 */
 		{
 			provide: UserRepository,
 			useClass: UsersInMemoryRepository,
 		},
+
+		/**
+		 * Use cases.
+		 */
 		CreateUserUsecase,
+
+		/**
+		 * Provides the application configuration.
+		 */
 		ApiConfigService,
+
+		/**
+		 * Provides access to the database connection instance.
+		 */
+		PrismaService
 	],
 })
 export class AppModule {}
