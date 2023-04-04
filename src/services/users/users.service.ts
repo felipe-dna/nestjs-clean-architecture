@@ -5,7 +5,7 @@ import { Observable } from 'rxjs'
 import { UserCreatedDto } from '../../shared/dtos/user-created.dto'
 
 @Controller('/users')
-export class UsersControllers {
+export class UserService {
   constructor(private createUserUseCase: CreateUserUsecase) {}
 
   @Post()
