@@ -2,13 +2,16 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common"
 import { Service } from "@base/service"
 import { SignupBodyDto } from "@dtos/auth/auth.dto"
 import { UserRepository } from "@repositories/users/user.repository"
-import { JwtService } from "@nestjs/jwt"
 import { map } from "rxjs"
-import * as bcrypt from 'bcrypt'
+import { UserEntity } from "@entities/users"
+import { AuthHelper, Tokens } from "@/core/utils/auth"
+
+
+type SignupResponse = Omit<UserEntity, 'passwordHash' | 'hashedRT'> & Tokens
 
 @Injectable()
 export class SignupService implements Service<any> {
-	constructor(private repository: UserRepository, private jwtService: JwtService) {}
+	constructor(private repository: UserRepository, private authHelper: AuthHelper) {}
 
 	private async validateEmailExistence(email: string): Promise<void> {
 		const emailExists = await this.repository.getOne({ email })
@@ -20,40 +23,25 @@ export class SignupService implements Service<any> {
 		})
 	}
 
-	private async getTokens(userId: string, email: string): Promise<{ access_token: string; refresh_token: string }> {
-		const [at, rt] = await Promise.all([
-			this.jwtService.signAsync({
-				sub: userId,
-				email
-			}, {
-				expiresIn: 60 * 15,
-				secret: 'at-secret'
-			}),
-			this.jwtService.signAsync({
-				sub: userId,
-				email
-			}, {
-				expiresIn: 60 * 60 * 24 * 7,
-				secret: 'rt-secret'
-			})
-		]);
-
-		return {
-			access_token: at,
-			refresh_token: rt
-		}
-	}
-
-	private async hashData(data: string): Promise<string> {
-		return await bcrypt.hash(data, 10)
-	}
-
 	private async updateHash(userId: string, refreshToken: string) {
-		const hash = await this.hashData(refreshToken)
+		const hash = await this.authHelper.hashData(refreshToken)
 		await this.repository.patch(
 			userId,
 			{ hashedRT: hash }
 		)
+	}
+
+	private async mapResponse(userData: Promise<UserEntity & Tokens>): Promise<SignupResponse> {
+		const {id, firstName, lastName, refreshToken, accessToken, email} = await userData
+
+		return {
+			id,
+			firstName,
+			lastName,
+			email,
+			accessToken,
+			refreshToken,
+		}
 	}
 
 	async execute({ email, firstName, lastName, password }: SignupBodyDto) {
@@ -63,25 +51,37 @@ export class SignupService implements Service<any> {
 			email,
 			firstName,
 			lastName,
-			passwordHash: await this.hashData(password)
+			passwordHash: await this.authHelper.hashData(password)
 		})
 
 		return await newUser.pipe(
-			map(async ({id, email, ...user}) => ({
-				id,
-				email,
-				...user,
-				...(await this.getTokens(id, email))
-			})),
-			map(async (userData) => {
+			/**
+			 * Generates the tokens.
+			 */
+			map(async ({ id, email, ...user }) => {
+				const tokens = await this.authHelper.generateTokens(id, email)
+
+				return {
+					id,
+					email,
+					...user,
+					...tokens
+				}
+			}),
+
+			/**
+			 * Updates the given hash in the database.
+			 */
+			map(async userData => {
 				const user = await userData
-				await this.updateHash(user.id, user.refresh_token)
+				await this.updateHash(user.id, user.email)
 				return user
 			}),
-			map(async (userData) => {
-				const { id, firstName, lastName, email, access_token, refresh_token } = await userData
-				return {id, firstName, lastName, email, access_token, refresh_token }
-			})
+
+			/**
+			 * Returns the mapped response.
+			 */
+			map(this.mapResponse)
 		)
 	}
 }

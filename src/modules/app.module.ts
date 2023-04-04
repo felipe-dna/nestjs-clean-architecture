@@ -15,6 +15,7 @@ import { DatabaseModule } from './database/database.module'
 		}),
 		DatabaseModule,
 		AuthModule,
+
 	],
 	controllers: [],
 	providers: [

@@ -1,6 +1,8 @@
 export interface AppConfig {
 	port: number
 	name: string
+	accessTokenSecret: string
+	refreshTokenSecret: string
 }
 
 export interface SwaggerConfig {

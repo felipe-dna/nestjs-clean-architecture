@@ -35,6 +35,8 @@ export class ApiConfigService {
 		return {
 			port: this.getVar<AppConfig['port']>('APP_PORT'),
 			name: this.getVar<AppConfig['name']>('APP_NAME'),
+			accessTokenSecret: this.getVar<AppConfig['accessTokenSecret']>('ACCESS_TOKEN_SECRET'),
+			refreshTokenSecret: this.getVar<AppConfig['refreshTokenSecret']>('REFRESH_TOKEN_SECRET'),
 		}
 	}
 }
