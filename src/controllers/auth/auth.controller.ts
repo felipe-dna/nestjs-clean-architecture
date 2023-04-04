@@ -1,21 +1,23 @@
-import { Body, Controller, HttpCode, HttpStatus, Post,  UseGuards } from "@nestjs/common"
-import { SignupBodyDto } from "@dtos/auth/auth.dto"
-import { SiginBodyDto } from "@dtos/auth/signin.dto"
-import { LogoutService } from "@services/auth/logout.service"
-import { SigninUserService } from "@services/auth/signin.service"
-import { SignupService } from "@services/auth/signup.service"
-import {  RefreshTokenGuard } from "@guards"
-import { GetCurrentUserId, GetUserParam, Public } from "@decorators"
+import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common'
+import { SignupBodyDto } from '@dtos/auth/auth.dto'
+import { SiginBodyDto } from '@dtos/auth/signin.dto'
+import { LogoutService } from '@services/auth/logout.service'
+import { SigninUserService } from '@services/auth/signin.service'
+import { SignupService } from '@services/auth/signup.service'
+import { RefreshTokenGuard } from '@guards'
+import { GetCurrentUserId, GetUserParam, Public } from '@decorators'
+import { RefreshTokenService } from '@services/auth/refresh-token.service'
 
 @Controller({
 	path: 'auth',
-	version: '1'
+	version: '1',
 })
 export class AuthController {
-	constructor (
+	constructor(
 		private signupService: SignupService,
 		private siginService: SigninUserService,
-		private logoutService: LogoutService
+		private logoutService: LogoutService,
+		private refreshTokenService: RefreshTokenService,
 	) {}
 
 	@Public()
@@ -32,17 +34,18 @@ export class AuthController {
 		return await this.siginService.execute(body)
 	}
 
+	@Public()
 	@Post('logout')
 	@HttpCode(HttpStatus.NO_CONTENT)
 	async logout(@GetCurrentUserId() userId: string) {
 		return await this.logoutService.execute(userId)
 	}
 
+	@Public()
 	@UseGuards(RefreshTokenGuard)
 	@Post('refresh')
 	@HttpCode(HttpStatus.OK)
-	async refreshTokens(
-		@GetCurrentUserId() userId: string,
-		@GetUserParam('refreshToken') refreshToken: string
-	) {}
+	async refreshTokens(@GetCurrentUserId() userId: string, @GetUserParam('refreshToken') refreshToken: string) {
+		return await this.refreshTokenService.execute(userId, refreshToken)
+	}
 }

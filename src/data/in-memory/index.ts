@@ -47,10 +47,8 @@ export class InMemoryRepository<TEntity extends Entity> extends Repository<TEnti
 		return of(this.items[index])
 	}
 
-	public async getById(id: string): Promise<Observable<TEntity>> {
-		const items = this.items.find(item => item.id === id)
-
-		return of(items)
+	public async getById(id: string): Promise<TEntity> {
+		return this.items.find(item => item.id === id)
 	}
 
 	public async getAll(): Promise<Observable<TEntity[]>> {

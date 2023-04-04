@@ -1,11 +1,10 @@
-import { map } from "rxjs"
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common"
-import { Service } from "@base/service"
-import { SignupBodyDto } from "@dtos/auth/auth.dto"
-import { UserRepository } from "@repositories/users/user.repository"
-import { UserEntity } from "@entities/users"
-import { AuthHelper, Tokens } from "@/core/utils/auth"
-
+import { concatMap, map } from 'rxjs'
+import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { Service } from '@base/service'
+import { SignupBodyDto } from '@dtos/auth/auth.dto'
+import { UserRepository } from '@repositories/users/user.repository'
+import { UserEntity } from '@entities/users'
+import { AuthHelper, Tokens } from '@/core/utils/auth'
 
 type SignupResponse = Omit<UserEntity, 'passwordHash' | 'hashedRT'> & Tokens
 
@@ -18,21 +17,18 @@ export class SignupService implements Service<any> {
 
 		emailExists.subscribe(user => {
 			if (user) {
-				throw new HttpException('An user with this email already exists.', HttpStatus.BAD_REQUEST)
+				throw new BadRequestException('An user with this email already exists.')
 			}
 		})
 	}
 
 	private async updateHash(userId: string, refreshToken: string) {
 		const hash = await this.authHelper.hashData(refreshToken)
-		await this.repository.patch(
-			userId,
-			{ hashedRT: hash }
-		)
+		await this.repository.patch(userId, { hashedRT: hash })
 	}
 
 	private async mapResponse(userData: Promise<UserEntity & Tokens>): Promise<SignupResponse> {
-		const {id, firstName, lastName, refreshToken, accessToken, email} = await userData
+		const { id, firstName, lastName, refreshToken, accessToken, email } = await userData
 
 		return {
 			id,
@@ -45,13 +41,17 @@ export class SignupService implements Service<any> {
 	}
 
 	async execute({ email, firstName, lastName, password }: SignupBodyDto) {
-    await this.validateEmailExistence(email)
+		const emailExists = await this.repository.getOne({ email })
+
+		emailExists.subscribe(user => {
+			if (user) throw new BadRequestException('An user with this email already exists.')
+		})
 
 		const newUser = await this.repository.create({
 			email,
 			firstName,
 			lastName,
-			passwordHash: await this.authHelper.hashData(password)
+			passwordHash: await this.authHelper.hashData(password),
 		})
 
 		return await newUser.pipe(
@@ -65,7 +65,7 @@ export class SignupService implements Service<any> {
 					id,
 					email,
 					...user,
-					...tokens
+					...tokens,
 				}
 			}),
 
@@ -81,7 +81,7 @@ export class SignupService implements Service<any> {
 			/**
 			 * Returns the mapped response.
 			 */
-			map(this.mapResponse)
+			map(this.mapResponse),
 		)
 	}
 }
