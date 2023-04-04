@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { Repository } from '../../core/base/repository'
 import { Entity } from '../../core/base/entity'
 import { map, Observable, of } from 'rxjs'
+import { randomUUID } from 'crypto'
 
 @Injectable()
 export class InMemoryRepository<TEntity extends Entity> extends Repository<TEntity> {
@@ -13,13 +14,13 @@ export class InMemoryRepository<TEntity extends Entity> extends Repository<TEnti
   }
 
   public create(data: TEntity): Observable<TEntity> {
-    data.id = this.items.length > 0 ? this.items.slice(-1)[0].id + 1 : 1
+    data.id = randomUUID()
     const count = this.items.push(data)
     console.log(this.items)
     return of(this.items[count - 1])
   }
 
-  public update(id: number, data: TEntity): Observable<TEntity> {
+  public update(id: string, data: TEntity): Observable<TEntity> {
     const index = this.getIndexById(id)
 
     if (index === -1) {
@@ -31,7 +32,7 @@ export class InMemoryRepository<TEntity extends Entity> extends Repository<TEnti
     return of(this.items[index])
   }
 
-  public patch(id: number, data: Partial<TEntity>): Observable<TEntity> {
+  public patch(id: string, data: Partial<TEntity>): Observable<TEntity> {
     const index = this.getIndexById(id)
 
     if (index === -1) {
@@ -46,7 +47,7 @@ export class InMemoryRepository<TEntity extends Entity> extends Repository<TEnti
     return of(this.items[index])
   }
 
-  public getById(id: number): Observable<TEntity> {
+  public getById(id: string): Observable<TEntity> {
     const items = this.items.find(item => item.id === id)
 
     return of(items)
@@ -70,18 +71,18 @@ export class InMemoryRepository<TEntity extends Entity> extends Repository<TEnti
     return of(filtered)
   }
 
-  public delete(id: number): Observable<void> {
+  public delete(id: string): Observable<void> {
     const index = this.getIndexById(id)
 
     if (index === -1) {
       // todo: trate o caso de não encontrar o item a ser deletado
     }
 
-    this.items.splice(index, 1)
+    this.items.filter(item => item.id !== id)
     return of()
   }
 
-  private getIndexById(id: number) {
+  private getIndexById(id: string) {
     return this.items.findIndex(item => item.id === id)
   }
 }

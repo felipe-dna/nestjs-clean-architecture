@@ -1,5 +1,5 @@
 {
-  "name": "<my-project-name>",
+  "name": "my-project-name",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -34,6 +34,7 @@
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/swagger": "^6.3.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0"
   },

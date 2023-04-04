@@ -1,4 +1,4 @@
 export class UserCreatedDto {
-  id: number
+  id: string
   name: string
 }

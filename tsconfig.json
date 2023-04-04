@@ -20,11 +20,13 @@
     "paths": {
       "@usecases/*": ["src/usecases/*"],
       "@dtos/*": ["src/shared/dtos/*"],
-      "@services/*": ["src/services/*"],
+      "@controllers/*": ["src/controllers/*"],
       "@repositories/*": ["src/core/repositories/*"],
       "@entities/*": ["src/core/domain/entities/*"],
       "@mappers/*": ["src/mappers/*"],
       "@base/*": ["src/core/base/*"],
+			"@modules/*": ["src/modules/*"],
+			"@data/*": ["src/data/*"],
       "@/*": ["src/*"]
     }
   }
