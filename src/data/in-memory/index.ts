@@ -13,14 +13,14 @@ export class InMemoryRepository<TEntity extends Entity> extends Repository<TEnti
 		this.items = []
 	}
 
-	public create(data: TEntity): Observable<TEntity> {
+	public async create(data: TEntity): Promise<Observable<TEntity>> {
 		data.id = randomUUID()
 		const count = this.items.push(data)
 		console.log(this.items)
 		return of(this.items[count - 1])
 	}
 
-	public update(id: string, data: TEntity): Observable<TEntity> {
+	public async update(id: string, data: TEntity): Promise<Observable<TEntity>> {
 		const index = this.getIndexById(id)
 
 		if (index === -1) {
@@ -32,7 +32,7 @@ export class InMemoryRepository<TEntity extends Entity> extends Repository<TEnti
 		return of(this.items[index])
 	}
 
-	public patch(id: string, data: Partial<TEntity>): Observable<TEntity> {
+	public async patch(id: string, data: Partial<TEntity>): Promise<Observable<TEntity>> {
 		const index = this.getIndexById(id)
 
 		if (index === -1) {
@@ -47,21 +47,21 @@ export class InMemoryRepository<TEntity extends Entity> extends Repository<TEnti
 		return of(this.items[index])
 	}
 
-	public getById(id: string): Observable<TEntity> {
+	public async getById(id: string): Promise<Observable<TEntity>> {
 		const items = this.items.find(item => item.id === id)
 
 		return of(items)
 	}
 
-	public getAll(): Observable<TEntity[]> {
+	public async getAll(): Promise<Observable<TEntity[]>> {
 		return of(this.items)
 	}
 
-	public getOne(filter: Partial<TEntity>): Observable<TEntity> {
-		return this.getMany(filter).pipe(map(items => (items.length > 0 ? items[0] : null)))
+	public async getOne(filter: Partial<TEntity>): Promise<Observable<TEntity>> {
+		return (await this.getMany(filter)).pipe(map(items => (items.length > 0 ? items[0] : null)))
 	}
 
-	public getMany(filter: Partial<TEntity>): Observable<TEntity[]> {
+	public async getMany(filter: Partial<TEntity>): Promise<Observable<TEntity[]>> {
 		let filtered = this.items
 
 		for (const key in filter) {
@@ -71,7 +71,7 @@ export class InMemoryRepository<TEntity extends Entity> extends Repository<TEnti
 		return of(filtered)
 	}
 
-	public delete(id: string): Observable<void> {
+	public async delete(id: string): Promise<Observable<void>> {
 		const index = this.getIndexById(id)
 
 		if (index === -1) {
