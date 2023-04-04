@@ -4,6 +4,8 @@ import { UsersDatabaseRepository } from "@data/database/users/user-database.repo
 import { Module } from "@nestjs/common"
 import { JwtModule } from "@nestjs/jwt"
 import { UserRepository } from "@repositories/users/user.repository"
+import { LogoutService } from "@services/auth/logout.service"
+import { SigninUserService } from "@services/auth/signin.service"
 import { SignupService } from "@services/auth/signup.service"
 import { AtStrategy, RtStrategy } from "@services/auth/strategies"
 import { ApiConfigService } from "@services/config/api-config.service"
@@ -28,6 +30,8 @@ import { ApiConfigService } from "@services/config/api-config.service"
 			useClass: UsersDatabaseRepository,
 		},
 		SignupService,
+		SigninUserService,
+		LogoutService,
 		AtStrategy,
 		RtStrategy
 	]

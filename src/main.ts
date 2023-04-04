@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core'
-import { AppModule } from '@modules/app.module'
 import { INestApplication, Logger, ValidationPipe, VersioningType } from '@nestjs/common'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { AppModule } from '@modules/app.module'
 import { ApiConfigService } from '@services/config/api-config.service'
 
 /**

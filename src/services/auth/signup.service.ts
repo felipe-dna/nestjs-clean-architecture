@@ -1,8 +1,8 @@
+import { map } from "rxjs"
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common"
 import { Service } from "@base/service"
 import { SignupBodyDto } from "@dtos/auth/auth.dto"
 import { UserRepository } from "@repositories/users/user.repository"
-import { map } from "rxjs"
 import { UserEntity } from "@entities/users"
 import { AuthHelper, Tokens } from "@/core/utils/auth"
 

@@ -27,6 +27,8 @@
       "@base/*": ["src/core/base/*"],
 			"@modules/*": ["src/modules/*"],
 			"@data/*": ["src/data/*"],
+			"@decorators": ["src/common/decorators/index"],
+			"@guards": ["src/common/guards/index"],
       "@/*": ["src/*"]
     }
   }

@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common"
 import { DatabaseRepository } from "@/data/database"
 import { UserEntity } from "@entities/users"
 import { UserRepository } from "@repositories/users/user.repository"
-import { Observable, of } from "rxjs"
+import { Observable,  of } from "rxjs"
 import { PrismaService } from "@services/prisma/prisma.service"
 
 @Injectable()

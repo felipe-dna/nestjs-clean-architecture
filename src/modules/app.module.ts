@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common'
+import { APP_GUARD } from '@nestjs/core'
 import { ConfigModule } from '@nestjs/config'
+import { AccessTokenGuard } from '@guards'
+import { AuthModule } from '@modules/auth/auth.module'
 import { ApiConfigService } from '@services/config/api-config.service'
-import { AuthModule } from './auth/auth.module'
-import { DatabaseModule } from './database/database.module'
+import { DatabaseModule } from '@modules/database/database.module'
 
 @Module({
 	imports: [
@@ -15,22 +17,20 @@ import { DatabaseModule } from './database/database.module'
 		}),
 		DatabaseModule,
 		AuthModule,
-
 	],
-	controllers: [],
 	providers: [
-		/**
-		 * Repositories.
-		 */
-
-		/**
-		 * Use cases.
-		 */
-
 		/**
 		 * Provides the application configuration.
 		 */
 		ApiConfigService,
+
+		/**
+		 * Guards
+		 */
+		{
+			provide: APP_GUARD,
+			useClass: AccessTokenGuard
+		}
 	],
 })
 export class AppModule {}

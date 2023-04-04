@@ -42,6 +42,10 @@ export class AuthHelper {
 	async hashData(data: string): Promise<string> {
 		return await bcrypt.hash(data, 10)
 	}
+
+	async comparePasswords(password: string, hashedPassword: string) {
+		return await bcrypt.compare(password, hashedPassword)
+	}
 }
 
 
