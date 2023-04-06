@@ -16,6 +16,20 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@services/*": ["src/services/*"],
+      "@dtos/*": ["src/shared/dtos/*"],
+      "@controllers/*": ["src/controllers/*"],
+      "@repositories/*": ["src/core/repositories/*"],
+      "@entities/*": ["src/core/domain/entities/*"],
+      "@mappers/*": ["src/core/domain/mappers/*"],
+      "@base/*": ["src/core/base/*"],
+			"@modules/*": ["src/modules/*"],
+			"@data/*": ["src/data/*"],
+			"@decorators": ["src/common/decorators/index"],
+			"@guards": ["src/common/guards/index"],
+      "@/*": ["src/*"]
+    }
   }
 }

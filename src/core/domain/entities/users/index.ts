@@ -1,7 +1,8 @@
-import { Entity } from '../../../base/entity'
-
+import { Entity } from '@base/entity'
 export class UserEntity extends Entity {
-  public name: string
-  public password: string
-  public email: string
+	public firstName: string
+	public lastName: string
+	public passwordHash: string
+	public email: string
+	public hashedRT?: string
 }
